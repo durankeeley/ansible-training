@@ -1,4 +1,4 @@
-- name: Configure router
+- name: Configure Cisco Switch
   hosts: cisco_switches
   gather_facts: no
   tasks:
@@ -30,11 +30,29 @@
         - config t
         #- int Gi1/0/1
         - interface range GigabitEthernet 1/0/1 - 12
+        - no switchport mode access
+        - no switchport access vlan
         - switchport mode access
         - switchport access vlan 10
-        - interface range GigabitEthernet 1/0/13 - 24
+        - interface range GigabitEthernet 1/0/13 - 20
+        - no switchport mode access
+        - no switchport access vlan
         - switchport mode access
         - switchport access vlan 20
-    register: cmd
-  - name: output
-    debug: msg="{{cmd.output}}"
+        - exit 
+  - name: assign ports to trunks
+    ansible.netcommon.telnet:
+      user: admin
+      password: cisco
+      login_prompt: "Username: "
+      password_prompt: "Password: "
+      prompts:
+        - '[>|#]'
+      commands:
+        - terminal length 0
+        - config t
+        - interface range GigabitEthernet 1/0/21 - 24
+        - no switchport mode access
+        - no switchport access vlan
+        - switchport mode trunk
+        - switchport trunk allowed vlan 10,20

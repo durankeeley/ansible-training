@@ -1,0 +1,15 @@
+- hosts: awplus
+  connection: network_cli
+  collections:
+    - alliedtelesis.awplus
+  tasks:
+    - name: Replace VLANs to only have the following
+      awplus_vlans:
+        config:
+          - name: V50
+            state: active
+            vlan_id: 50
+          - name: V40
+            state: active
+            vlan_id: 40
+        state: overridden

@@ -3,3 +3,4 @@ collections:
 # - arubanetworks.aos_switch
 # - cisco.ios
 - ansible.netcommon
+- alliedtelesis.awplus
