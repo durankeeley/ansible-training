@@ -2,7 +2,7 @@
   hosts: cisco_switches
   gather_facts: no
   tasks:
-  - name: run show commands
+  - name: config vlan 10 and vlan 20
     ansible.netcommon.telnet:
       user: admin
       password: cisco
@@ -12,8 +12,29 @@
         - '[>|#]'
       commands:
         - terminal length 0
-        #- show version
-        #- show vlan
+        - config t
+        - vlan 10
+        - name V10
+        - vlan 20
+        - name V20
+  - name: assign ports to vlans
+    ansible.netcommon.telnet:
+      user: admin
+      password: cisco
+      login_prompt: "Username: "
+      password_prompt: "Password: "
+      prompts:
+        - '[>|#]'
+      commands:
+        - terminal length 0
+        - config t
+        #- int Gi1/0/1
+        - interface range GigabitEthernet 1/0/1 - 12
+        - switchport mode access
+        - switchport access vlan 10
+        - interface range GigabitEthernet 1/0/13 - 24
+        - switchport mode access
+        - switchport access vlan 20
     register: cmd
   - name: output
     debug: msg="{{cmd.output}}"
