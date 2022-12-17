@@ -1,27 +1,19 @@
-- hosts: cisco_switches
+- name: Configure router
+  hosts: cisco_switches
+  gather_facts: no
   tasks:
-  - name: Configure VLAN 10
-    cisco.ios.ios_config:
-      lines:
-        - vlan 10
-        - name VLAN10
-  - name: Configure VLAN 20
-    cisco.ios.ios_config:
-      lines:
-        - vlan 20
-        - name VLAN20
-  - name: Configure VLAN interface for VLAN 10
-    cisco.ios.ios_interface:
-      name: VLAN10
-      description: VLAN 10 interface
-      enabled: true
-      vlan: 10
-  - name: Configure VLAN interface for VLAN 20
-    cisco.ios.ios_interface:
-      name: VLAN20
-      description: VLAN 20 interface
-      enabled: true
-      vlan: 20
-  - name: Save configuration
-    cisco.ios.ios_config:
-      save_when: modified
+  - name: run show commands
+    ansible.netcommon.telnet:
+      user: admin
+      password: cisco
+      login_prompt: "Username: "
+      password_prompt: "Password: "
+      prompts:
+        - '[>|#]'
+      commands:
+        - terminal length 0
+        #- show version
+        #- show vlan
+    register: cmd
+  - name: output
+    debug: msg="{{cmd.output}}"

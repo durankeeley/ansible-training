@@ -1,0 +1,5 @@
+collections:
+# - netbox.netbox
+# - arubanetworks.aos_switch
+# - cisco.ios
+- ansible.netcommon
